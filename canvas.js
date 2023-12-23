@@ -28,3 +28,14 @@ c.lineTo(random(0, window.innerWidth), random(0, window.innerHeight));
 c.lineTo(random(0, window.innerWidth), random(0, window.innerHeight));
 c.strokeStyle = '#FFF';
 c.stroke();
+
+// Arc/Circle
+c.beginPath();
+c.arc(
+  random(maxSize, window.innerWidth-maxSize),
+  random(maxSize, window.innerHeight-maxSize),
+  random(0, maxSize),
+  0,
+  2*Math.PI,
+);
+c.stroke();
