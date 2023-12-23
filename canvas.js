@@ -1,3 +1,7 @@
+function random(lo, hi) {
+  return Math.random()*(hi - lo) + lo;
+}
+
 const canvas = document.querySelector('canvas');
 
 canvas.width = window.innerWidth;
@@ -8,10 +12,19 @@ const c = canvas.getContext('2d');
 const maxSize = 100;
 
 for (let i = 0; i < 10; i++) {
+  c.fillStyle = `rgba(${random(0, 256)}, ${random(0, 256)}, ${random(0, 256)}, ${random(0.5, 1)})`;
   c.fillRect(
-    Math.random()*(window.innerWidth-maxSize),
-    Math.random()*(window.innerHeight-maxSize),
-    Math.random()*maxSize, 
-    Math.random()*maxSize
+    random(0, window.innerWidth-maxSize),
+    random(0, window.innerHeight-maxSize),
+    random(0, maxSize),
+    random(0, maxSize),
   );
 }
+
+// Lines
+c.beginPath();
+c.moveTo(random(0, window.innerWidth), random(0, window.innerHeight));
+c.lineTo(random(0, window.innerWidth), random(0, window.innerHeight));
+c.lineTo(random(0, window.innerWidth), random(0, window.innerHeight));
+c.strokeStyle = '#FFF';
+c.stroke();
