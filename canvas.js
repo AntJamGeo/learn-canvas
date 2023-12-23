@@ -53,8 +53,8 @@ class Circle {
   draw () {
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-    c.strokeStyle = this.colour;
-    c.stroke();
+    c.fillStyle = this.colour;
+    c.fill();
   }
 
   update() {
@@ -71,22 +71,33 @@ class Circle {
   }
 }
 
-const radius = 50;
+let circles = [];
+for (let i = 0; i < 50; i++) {
+  const radius = random(20, 50);
+  const red = random(0, 255);
+  const green = random(0, 255);
+  const blue = random(0, 255);
+  const colour = `rgba(${red}, ${green}, ${blue}, 1)`;
 
-let circle = new Circle(
-  random(radius, innerWidth-radius),
-  random(radius, innerHeight-radius),
-  random(5, 25),
-  random(5, 25),
-  radius,
-  '#000',
-)
-circle.draw();
+  circles.push(
+    new Circle(
+      random(radius, innerWidth-radius),
+      random(radius, innerHeight-radius),
+      Math.sign(random(0, 1)-0.5) * random(5, 15),
+      Math.sign(random(0, 1)-0.5) * random(5, 15),
+      radius,
+      colour,
+    )
+  )
+  circles[i].draw();
+}
 
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  circle.update()
+  for (let circle of circles) {
+    circle.update();
+  }
 }
 
 animate();
