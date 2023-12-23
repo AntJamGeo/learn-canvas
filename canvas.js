@@ -40,32 +40,53 @@ const maxSize = 100;
 // );
 // c.stroke();
 
-let radius = 50;
-let x = random(radius, innerWidth-radius);
-let y = random(radius, innerHeight-radius);
-let dx = random(5, 25);
-let dy = random(5, 25);
+class Circle {
+  constructor (x, y, dx, dy, radius, colour) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.radius = radius;
+    this.colour = colour;
+  }
+
+  draw () {
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+    c.strokeStyle = this.colour;
+    c.stroke();
+  }
+
+  update() {
+    if (this.x >= innerWidth - this.radius || this.x <= this.radius) {
+      this.dx = -this.dx;
+    }
+    if (this.y >= innerHeight - this.radius || this.y <= this.radius) {
+      this.dy = -this.dy;
+    }
+    this.x += this.dx;
+    this.y += this.dy;
+
+    this.draw();
+  }
+}
+
+const radius = 50;
+
+let circle = new Circle(
+  random(radius, innerWidth-radius),
+  random(radius, innerHeight-radius),
+  random(5, 25),
+  random(5, 25),
+  radius,
+  '#000',
+)
+circle.draw();
+
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  c.beginPath();
-  c.arc(
-    x,
-    y,
-    radius,
-    0,
-    2*Math.PI,
-  );
-  c.strokeStyle = '#000';
-  c.stroke();
-  if (x >= innerWidth - radius || x <= radius) {
-    dx = -dx;
-  }
-  if (y >= innerHeight - radius || y <= radius) {
-    dy = -dy;
-  }
-  x += dx;
-  y += dy;
+  circle.update()
 }
 
 animate();
