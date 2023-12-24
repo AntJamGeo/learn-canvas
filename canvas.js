@@ -22,6 +22,7 @@ const canvas = document.querySelector('canvas');
 const hoverRadius = 50;
 const maxRadius = 10;
 const speedSquared = 10;
+const circleDensity = 0.001;
 const c = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
@@ -107,7 +108,9 @@ class Circle {
 let circles = [];
 function init() {
   circles = [];
-  for (let i = 0; i < 800; i++) {
+  const numCircles = Math.floor(innerWidth*innerHeight*circleDensity);
+  console.log(numCircles);
+  for (let i = 0; i < numCircles; i++) {
     const radius = random(1, 4);
     const x = random(radius, innerWidth-radius);
     const y = random(radius, innerHeight-radius);
