@@ -40,13 +40,38 @@ const maxSize = 100;
 // );
 // c.stroke();
 
+const mouse = {
+  x: undefined,
+  y: undefined,
+};
+
+addEventListener(
+  'mousemove',
+  function(event) {
+    mouse.x = event.x;
+    mouse.y = event.y;
+  }
+);
+
+addEventListener(
+  'mouseout',
+  function(event) {
+    if(event.clientY <= 0 || event.clientX <= 0 || (event.clientX >= innerWidth || event.clientY >= innerHeight)) {
+      mouse.x = undefined;
+      mouse.y = undefined;
+    }
+  }
+);
+
 class Circle {
-  constructor (x, y, dx, dy, radius, colour) {
+  constructor (x, y, dx, dy, radius, hoverRadius, colour) {
     this.x = x;
     this.y = y;
     this.dx = dx;
     this.dy = dy;
     this.radius = radius;
+    this.minRadius = radius;
+    this.hoverRadius = 20;
     this.colour = colour;
   }
 
@@ -67,13 +92,26 @@ class Circle {
     this.x += this.dx;
     this.y += this.dy;
 
+    if (isClose(this.x, mouse.x, this.y, mouse.y, hoverRadius)) {
+        this.radius = hoverRadius;
+        this.colour = 'red';
+    } else if (this.radius > this.minRadius) {
+      this.radius--;
+      this.colour = 'aqua';
+    }
+
     this.draw();
   }
 }
 
+function isClose(x1, x2, y1, y2, radius) {
+  return (x1-x2)**2 + (y1-y2)**2 < radius**2;
+}
+
 let circles = [];
-for (let i = 0; i < 50; i++) {
-  const radius = random(20, 50);
+const hoverRadius = 20;
+for (let i = 0; i < 100; i++) {
+  const radius = random(5, 10);
   const red = random(0, 255);
   const green = random(0, 255);
   const blue = random(0, 255);
@@ -86,6 +124,7 @@ for (let i = 0; i < 50; i++) {
       Math.sign(random(0, 1)-0.5) * random(5, 15),
       Math.sign(random(0, 1)-0.5) * random(5, 15),
       radius,
+      hoverRadius,
       colour,
     )
   )
