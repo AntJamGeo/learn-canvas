@@ -6,6 +6,14 @@ function randomSign() {
   return Math.sign(Math.random() - 0.5);
 }
 
+function isClose(x1, x2, y1, y2, radius) {
+  return (x1-x2)**2 + (y1-y2)**2 < radius**2;
+}
+
+function keepInBounds(x, lo, hi) {
+  return x <= lo ? lo : x >= hi ? hi : x
+}
+
 const canvas = document.querySelector('canvas');
 
 canvas.width = window.innerWidth;
@@ -99,6 +107,8 @@ class Circle {
     if (isClose(this.x, mouse.x, this.y, mouse.y, hoverRadius)) {
         this.radius = hoverRadius;
         this.colour = 'red';
+        this.x = keepInBounds(this.x, hoverRadius, innerWidth - hoverRadius);
+        this.y = keepInBounds(this.y, hoverRadius, innerHeight - hoverRadius);
     } else if (this.radius > this.minRadius) {
       this.radius--;
       this.colour = 'aqua';
@@ -108,14 +118,10 @@ class Circle {
   }
 }
 
-function isClose(x1, x2, y1, y2, radius) {
-  return (x1-x2)**2 + (y1-y2)**2 < radius**2;
-}
-
 let circles = [];
 const hoverRadius = 50;
-for (let i = 0; i < 1; i++) {
-  const radius = random(5, 10);
+for (let i = 0; i < 50; i++) {
+  const radius = random(10, 30);
   const x = random(radius, innerWidth-radius);
   const y = random(radius, innerHeight-radius);
   const dx = randomSign() * random(5, 15);
