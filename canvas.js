@@ -50,6 +50,16 @@ addEventListener(
   }
 );
 
+addEventListener(
+  'resize',
+  function() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+
+    init();
+  }
+)
+
 class Circle {
   constructor (x, y, dx, dy, radius, hoverRadius, colour) {
     this.x = x;
@@ -95,19 +105,23 @@ class Circle {
 }
 
 let circles = [];
-for (let i = 0; i < 800; i++) {
-  const radius = random(1, 4);
-  const x = random(radius, innerWidth-radius);
-  const y = random(radius, innerHeight-radius);
-  const dx = randomSign() * random(1, 3);
-  const dy = randomSign() * Math.sqrt(speedSquared - dx**2);
-  const red = random(0, 255);
-  const green = random(0, 255);
-  const blue = random(0, 255);
-  const colour = `rgba(${red}, ${green}, ${blue}, 1)`;
+function init() {
+  circles = [];
+  for (let i = 0; i < 800; i++) {
+    const radius = random(1, 4);
+    const x = random(radius, innerWidth-radius);
+    const y = random(radius, innerHeight-radius);
+    const dx = randomSign() * random(1, 3);
+    const dy = randomSign() * Math.sqrt(speedSquared - dx**2);
+    const red = random(0, 255);
+    const green = random(0, 255);
+    const blue = random(0, 255);
+    const colour = `rgba(${red}, ${green}, ${blue}, 1)`;
 
-  circles.push(new Circle(x, y, dx, dy, radius, hoverRadius, colour));
-  circles[i].draw();
+    circles.push(new Circle(x, y, dx, dy, radius, hoverRadius, colour));
+    circles[i].draw();
+  }
+
 }
 
 function animate() {
@@ -119,3 +133,5 @@ function animate() {
 }
 
 animate();
+
+init();
