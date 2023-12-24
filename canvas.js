@@ -6,6 +6,10 @@ function randomSign() {
   return Math.sign(Math.random() - 0.5);
 }
 
+function randomInt(lo, hi) {
+  return Math.floor(random(lo, hi+1));
+}
+
 function isClose(x1, x2, y1, y2, radius) {
   return (x1-x2)**2 + (y1-y2)**2 < radius**2;
 }
@@ -15,42 +19,13 @@ function keepInBounds(x, lo, hi) {
 }
 
 const canvas = document.querySelector('canvas');
+const hoverRadius = 50;
+const maxRadius = 10;
+const speedSquared = 10;
+const c = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
-const c = canvas.getContext('2d');
-
-const maxSize = 100;
-
-// for (let i = 0; i < 10; i++) {
-//   c.fillStyle = `rgba(${random(0, 256)}, ${random(0, 256)}, ${random(0, 256)}, ${random(0.5, 1)})`;
-//   c.fillRect(
-//     random(0, window.innerWidth-maxSize),
-//     random(0, window.innerHeight-maxSize),
-//     random(0, maxSize),
-//     random(0, maxSize),
-//   );
-// }
-
-// // Lines
-// c.beginPath();
-// c.moveTo(random(0, window.innerWidth), random(0, window.innerHeight));
-// c.lineTo(random(0, window.innerWidth), random(0, window.innerHeight));
-// c.lineTo(random(0, window.innerWidth), random(0, window.innerHeight));
-// c.strokeStyle = '#FFF';
-// c.stroke();
-
-// // Arc/Circle
-// c.beginPath();
-// c.arc(
-//   random(maxSize, window.innerWidth-maxSize),
-//   random(maxSize, window.innerHeight-maxSize),
-//   random(0, maxSize),
-//   0,
-//   2*Math.PI,
-// );
-// c.stroke();
 
 const mouse = {
   x: undefined,
@@ -104,14 +79,15 @@ class Circle {
     this.x += this.dx;
     this.y += this.dy;
 
-    if (isClose(this.x, mouse.x, this.y, mouse.y, hoverRadius)) {
-        this.radius = hoverRadius;
-        this.colour = 'red';
-        this.x = keepInBounds(this.x, hoverRadius, innerWidth - hoverRadius);
-        this.y = keepInBounds(this.y, hoverRadius, innerHeight - hoverRadius);
-    } else if (this.radius > this.minRadius) {
+    if (
+      isClose(this.x, mouse.x, this.y, mouse.y, hoverRadius)
+      && this.radius <= maxRadius
+    ) {
+      this.radius++;
+      this.x = keepInBounds(this.x, this.radius, innerWidth - this.radius);
+      this.y = keepInBounds(this.y, this.radius, innerHeight - this.radius);
+    } else if (this.radius >= this.minRadius) {
       this.radius--;
-      this.colour = 'aqua';
     }
 
     this.draw();
@@ -119,13 +95,12 @@ class Circle {
 }
 
 let circles = [];
-const hoverRadius = 50;
-for (let i = 0; i < 50; i++) {
-  const radius = random(10, 30);
+for (let i = 0; i < 800; i++) {
+  const radius = random(1, 4);
   const x = random(radius, innerWidth-radius);
   const y = random(radius, innerHeight-radius);
-  const dx = randomSign() * random(5, 15);
-  const dy = randomSign() * random(5, 15);
+  const dx = randomSign() * random(1, 3);
+  const dy = randomSign() * Math.sqrt(speedSquared - dx**2);
   const red = random(0, 255);
   const green = random(0, 255);
   const blue = random(0, 255);
