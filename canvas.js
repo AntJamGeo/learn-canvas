@@ -71,7 +71,7 @@ class Circle {
     this.dy = dy;
     this.radius = radius;
     this.minRadius = radius;
-    this.hoverRadius = 20;
+    this.hoverRadius = hoverRadius;
     this.colour = colour;
   }
 
