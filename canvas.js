@@ -2,6 +2,10 @@ function random(lo, hi) {
   return Math.random()*(hi - lo) + lo;
 }
 
+function randomSign() {
+  return Math.sign(Math.random() - 0.5);
+}
+
 const canvas = document.querySelector('canvas');
 
 canvas.width = window.innerWidth;
@@ -109,25 +113,19 @@ function isClose(x1, x2, y1, y2, radius) {
 }
 
 let circles = [];
-const hoverRadius = 20;
-for (let i = 0; i < 100; i++) {
+const hoverRadius = 50;
+for (let i = 0; i < 1; i++) {
   const radius = random(5, 10);
+  const x = random(radius, innerWidth-radius);
+  const y = random(radius, innerHeight-radius);
+  const dx = randomSign() * random(5, 15);
+  const dy = randomSign() * random(5, 15);
   const red = random(0, 255);
   const green = random(0, 255);
   const blue = random(0, 255);
   const colour = `rgba(${red}, ${green}, ${blue}, 1)`;
 
-  circles.push(
-    new Circle(
-      random(radius, innerWidth-radius),
-      random(radius, innerHeight-radius),
-      Math.sign(random(0, 1)-0.5) * random(5, 15),
-      Math.sign(random(0, 1)-0.5) * random(5, 15),
-      radius,
-      hoverRadius,
-      colour,
-    )
-  )
+  circles.push(new Circle(x, y, dx, dy, radius, hoverRadius, colour));
   circles[i].draw();
 }
 
