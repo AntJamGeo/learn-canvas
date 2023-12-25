@@ -142,6 +142,6 @@ function animate() {
   }
 }
 
-animate();
-
 init();
+
+animate();
