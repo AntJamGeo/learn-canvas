@@ -39,10 +39,7 @@ export default class GlobalState {
       y: undefined,
     };
 
-    // Circle collections
-    this.circles = [];
-    this.circlesNearMouse = new Set();
-    this.circlePairs = new Set();
+    this.initialiseCircleCollections();
   }
   
   addEventListeners() {
@@ -55,5 +52,11 @@ export default class GlobalState {
 
   animate() {
     animate(this); 
+  }
+
+  initialiseCircleCollections() {
+    this.circles = [];
+    this.circlesNearMouse = new Set();
+    this.circlePairs = new Set();
   }
 }

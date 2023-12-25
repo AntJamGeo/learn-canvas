@@ -4,7 +4,7 @@ import MovingMouseInteractingCircle from '../circle/MovingMouseInteractingCircle
 export default function initialiseCanvas(globalState) {
   globalState.canvas.width = innerWidth;
   globalState.canvas.height = innerHeight;
-  globalState.circles = [];
+  globalState.initialiseCircleCollections();
   const numCircles = Math.floor(innerWidth * innerHeight * globalState.circleDensity);
   for (let i = 0; i < numCircles; i++) {
     const radius = random(globalState.minRadius, globalState.maxRadius);
