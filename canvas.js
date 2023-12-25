@@ -19,10 +19,17 @@ function keepInBounds(x, lo, hi) {
 }
 
 const canvas = document.querySelector('canvas');
-const hoverRadius = 50;
+const hoverRadius = 100;
 const maxRadius = 10;
 const speedSquared = 10;
-const circleDensity = 0.001;
+const circleDensity = 0.0005;
+const colourPalette = [
+  "#05AFF2",
+  "#0DB3D9",
+  "#F2A950",
+  "#F26716",
+  "#F21F0C",
+]
 const c = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
@@ -119,7 +126,7 @@ function init() {
     const red = random(0, 255);
     const green = random(0, 255);
     const blue = random(0, 255);
-    const colour = `rgba(${red}, ${green}, ${blue}, 1)`;
+    const colour = colourPalette[randomInt(0, colourPalette.length)];
 
     circles.push(new Circle(x, y, dx, dy, radius, hoverRadius, colour));
     circles[i].draw();
