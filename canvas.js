@@ -20,9 +20,15 @@ function keepInBounds(x, lo, hi) {
 
 const canvas = document.querySelector('canvas');
 const hoverRadius = 100;
-const maxRadius = 10;
+const minRadius = 1;
+const maxRadius = 4;
+const radiusOnHover = 10;
 const speedSquared = 10;
+const minHorizontalSpeed = 1;
+const maxHorizontalSpeed = Math.sqrt(speedSquared - minHorizontalSpeed**2);
 const circleDensity = 0.0005;
+const lineProbability = 0.1;
+const lineColour = '#FFF';
 const colourPalette = [
   "#05AFF2",
   "#0DB3D9",
@@ -97,10 +103,7 @@ class Circle {
     this.x += this.dx;
     this.y += this.dy;
 
-    if (
-      isClose(this.x, mouse.x, this.y, mouse.y, hoverRadius)
-      && this.radius <= maxRadius
-    ) {
+    if (this.isNearMouse() && this.radius <= radiusOnHover) {
       this.radius++;
       this.x = keepInBounds(this.x, this.radius, innerWidth - this.radius);
       this.y = keepInBounds(this.y, this.radius, innerHeight - this.radius);
@@ -110,6 +113,10 @@ class Circle {
 
     this.draw();
   }
+
+  isNearMouse() {
+    return isClose(this.x, mouse.x, this.y, mouse.y, hoverRadius);
+  }
 }
 
 let circles = [];
@@ -117,10 +124,10 @@ function init() {
   circles = [];
   const numCircles = Math.floor(innerWidth*innerHeight*circleDensity);
   for (let i = 0; i < numCircles; i++) {
-    const radius = random(1, 4);
+    const radius = random(minRadius, maxRadius);
     const x = random(radius, innerWidth-radius);
     const y = random(radius, innerHeight-radius);
-    const dx = randomSign() * random(1, 3);
+    const dx = randomSign() * random(minHorizontalSpeed, maxHorizontalSpeed);
     const dy = randomSign() * Math.sqrt(speedSquared - dx**2);
     const colour = colourPalette[randomInt(0, colourPalette.length)];
 
@@ -130,10 +137,46 @@ function init() {
 
 }
 
+const circlesNearMouse = new Set();
+const circlePairs = new Set();
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  for (let circle of circles) {
+
+  // Remove circles that are no longer near mouse from circlesNearMouse
+  for (const circle of circlesNearMouse) {
+    if (!circle.isNearMouse()) {
+      circlesNearMouse.delete(circle);
+    }
+  }
+  // Remove pairs of circles where at least one of the circles is no
+  // longer near the mouse
+  for (const pair of circlePairs) {
+    if (!circlesNearMouse.has(pair[0]) || !circlesNearMouse.has(pair[1])) {
+      circlePairs.delete(pair);
+    }
+  }
+  // Add new pairs for circles that have just come near to the mouse
+  for (const circle of circles) {
+    if (!circlesNearMouse.has(circle) && circle.isNearMouse()) {
+      for (const nearbyCircle of circlesNearMouse) {
+        if (Math.random() < lineProbability) {
+          circlePairs.add([circle, nearbyCircle]);
+        }
+      }
+      circlesNearMouse.add(circle);
+    }
+  }
+  // Redraw all lines between the collected pairs of circles
+  for (const pair of circlePairs) {
+    c.beginPath();
+    c.moveTo(pair[0].x, pair[0].y);
+    c.lineTo(pair[1].x, pair[1].y);
+    c.strokeStyle = lineColour;
+    c.stroke();
+  }
+  // Draw all circles
+  for (const circle of circles) {
     circle.update();
   }
 }
