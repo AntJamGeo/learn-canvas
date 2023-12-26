@@ -1,10 +1,11 @@
-import GlobalState from "./GlobalState.js";
+import addEventListeners from "./eventListeners/EventListeners.js";
+import initialiseCanvas from "./canvas/InitialiseCanvas.js";
+import animate from "./canvas/Animate.js";
 
 function main() {
-  const globalState = new GlobalState();
-  globalState.addEventListeners();
-  globalState.initialiseCanvas();
-  globalState.animate();
+  addEventListeners();
+  initialiseCanvas();
+  animate();
 }
 
 main();

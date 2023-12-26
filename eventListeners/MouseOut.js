@@ -1,9 +1,10 @@
-export default function mouseOut(globalState) {
+import { Mouse } from "../globalObjects/Mouse.js";
+
+export default function mouseOut() {
   return function(event) {
-    const mouse = globalState.mouse;
     if(event.clientY <= 0 || event.clientX <= 0 || (event.clientX >= innerWidth || event.clientY >= innerHeight)) {
-      mouse.x = undefined;
-      mouse.y = undefined;
+      Mouse.x = undefined;
+      Mouse.y = undefined;
     }
   }
 }

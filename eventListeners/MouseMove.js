@@ -1,6 +1,8 @@
-export default function mouseMove(globalState) {
+import { Mouse } from "../globalObjects/Mouse.js";
+
+export default function mouseMove() {
   return function(event) {
-    globalState.mouse.x = event.x;
-    globalState.mouse.y = event.y;
+    Mouse.x = event.x;
+    Mouse.y = event.y;
   }
 }
