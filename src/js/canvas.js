@@ -11,9 +11,9 @@ const mouse = {
   y: innerHeight / 2
 }
 
-const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
+const colors = ['#2185C5', '#7ECEFD', '#FF7F66']
 
-const GRAVITY = 0.5;
+const GRAVITY = 0.01;
 
 // Event Listeners
 addEventListener('mousemove', (event) => {
@@ -35,8 +35,8 @@ class Ball {
     this.y = y
     this.radius = radius
     this.color = color
-    this.energy = this.gpe();
-    this.dy = 0;
+    this.dx = Math.sign(Math.random() - 0.5) * randomFromRange(5, 10);
+    this.dy = Math.sign(Math.random() - 0.5) * randomFromRange(5, 10);
     this.elasticity = elasticity;
   }
 
@@ -49,21 +49,33 @@ class Ball {
   }
 
   update() {
-    console.log(this.y, this.dy);
-    if (this.gpe() >= this.energy) {
-      this.y = innerHeight - this.energy / GRAVITY;
-      this.dy = 0;
-    }
+    const minX = this.radius;
+    const maxX = innerWidth - this.radius;
+    const minY = this.radius;
     const maxY = innerHeight - this.radius;
     if (this.y > maxY) {
-      this.energy *= Math.sqrt(this.elasticity);
+      console.log("Floor Bounce");
       this.y = maxY;
-      this.dy = -Math.sqrt(2 * this.energy);
+      this.dy *= -this.elasticity
+    } else if (this.y < minY) {
+      this.y = minY;
+      this.dy *= -this.elasticity
     } else {
       this.dy += GRAVITY;
       this.y += this.dy;
     }
 
+    if (this.x < minX) {
+      console.log("Left Bounce");
+      this.x = minX;
+      this.dx *= -this.elasticity;
+    } else if (this.x > maxX) {
+      console.log("Left Bounce");
+      this.x = maxX;
+      this.dx *= -this.elasticity;
+    } else {
+      this.x += this.dx;
+    }
     // if (distance(this.x, this.y, mouse.x, mouse.y) <= this.radius) {
     //   this.showDetails();
     // }
@@ -71,7 +83,15 @@ class Ball {
   }
 
   gpe() {
-    return GRAVITY * (innerHeight - this.y);
+    return GRAVITY * (innerHeight - this.radius - this.y);
+  }
+
+  vke() {
+    return 0.5 * this.dy**2;
+  }
+
+  hke() {
+    return 0.5 * this.dx**2;
   }
 
   showDetails() {
